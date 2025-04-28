@@ -51,9 +51,9 @@ class Cluedo(tk.Tk):
         case_file_weapon = GameObjects.weapon_cards.pop(0)
         case_file_room = GameObjects.room_cards.pop(0)
 
-        GameObjects.envelope.append(case_file_suspect)
-        GameObjects.envelope.append(case_file_weapon)
         GameObjects.envelope.append(case_file_room)
+        GameObjects.envelope.append(case_file_weapon)
+        GameObjects.envelope.append(case_file_suspect)
 
         GameObjects.cards.extend(GameObjects.suspect_cards)
         GameObjects.cards.extend(GameObjects.weapon_cards)
@@ -67,41 +67,118 @@ class Cluedo(tk.Tk):
             player_cards[i % len(players)].append(card)
             i += 1
 
-    def roll_die():
-        GameObjects.die = random.randint(1, 6)
+    def create_button(self, frame, text, bg_color):
+        button = tk.Button(
+            master=frame,
+            text=text,
+            wraplength=50,
+            relief='solid',
+            disabledforeground='black',
+            fg='black',
+            bg=bg_color,
+            width=4,
+            height=3,
+            command=lambda: self.button_click(
+                button['text'])
+        )
+        return button
 
-    def player_move(self, player):
-        print(f'Miss Scarlett, select a room to inspect.')
-        # print('0 - Kitchen')
-        # print('1 - Ballroom')
-        # print('2 - Conservatory')
-        # print('3 - Billiard Room')
-        # print('4 - Dining Room')
-        # print('5 - Library')
-        # print('6 - Lounge')
-        # print('7 - Hall')
-        # print('8 - Study')
+    def button_click(self, room):
+        print(f'Miss Scarlett is in the {room}.')
+        self.close_window()
+
+    def close_window(self):
+        self.destroy()
+
+    def player_suggestion(self, player):
+        suggestion = []
+        rooms = {
+            '1': 'kitchen',
+            '2': 'ballroom',
+            '3': 'conservatory',
+            '4': 'billiard room',
+            '5': 'dining room',
+            '6': 'library',
+            '7': 'lounge',
+            '8': 'hall',
+            '9': 'study'
+        }
+        print(f'Miss Scarlett, make a suggestion.')
+        print('1 - Kitchen')
+        print('2 - Ballroom')
+        print('3 - Conservatory')
+        print('4 - Billiard Room')
+        print('5 - Dining Room')
+        print('6 - Library')
+        print('7 - Lounge')
+        print('8 - Hall')
+        print('9 - Study')
+        room_answer = input('Which room did the murder take place in?')
+        suggestion.append(rooms[room_answer])
+        weapons = {
+            '1': 'candlestick',
+            '2': 'knife',
+            '3': 'lead pipe',
+            '4': 'pistol',
+            '5': 'rope',
+            '6': 'wrench'
+        }
+        print('1 - Candlestick')
+        print('2 - knife')
+        print('3 - lead pipe')
+        print('4 - pistol')
+        print('5 - rope')
+        print('6 - wrench')
+        weapon_answer = input('Which weapon did the murderer use?')
+        suggestion.append(weapons[weapon_answer])
+        suspects = {
+            '1': 'miss scarlet',
+            '2': 'col mustard',
+            '3': 'mrs. white',
+            '4': 'mr. green',
+            '5': 'mrs. peacock',
+            '6': 'prof plum'
+        }
+        print('1 - Miss Scarlet')
+        print('2 - Col Mustard')
+        print('3 - Mrs. White')
+        print('4 - Mr. Green')
+        print('5 - Mrs. Peacock')
+        print('6 - Prof Plum')
+        suspect_answer = input('Who do you suspect committed the murderer?')
+        suggestion.append(suspects[suspect_answer])
+        return suggestion
+
+    def check_envelope(self, suggestion):
+        if (suggestion == GameObjects.envelope):
+            print('\nMiss Scarlett you have solved the mystery!')
+        else:
+            print('\nSorry Miss Scarlett, according to the case file:')
+            print(f'* The murder took place in the {GameObjects.envelope[0]}')
+            print(f'* The weapon used was a {GameObjects.envelope[1]}')
+            print(f'* And the murderer is {GameObjects.envelope[2]}!')
+
 
     def arrange_game_board(self):
         for suspect in GameObjects.suspects:
             Cluedo.board[GameObjects.suspects[suspect][0]
-                            ][GameObjects.suspects[suspect][1]] = suspect
+                         ][GameObjects.suspects[suspect][1]] = suspect
 
         for room in GameObjects.rooms:
             if (len(GameObjects.rooms[room]) <= 2):
                 Cluedo.board[GameObjects.rooms[room][0]
-                                ][GameObjects.rooms[room][1]] = room
+                             ][GameObjects.rooms[room][1]] = room
             else:
                 Cluedo.board[GameObjects.rooms[room][0]][GameObjects.rooms[room]
-                                                            [1]] = f'{room} ({GameObjects.rooms[room][2]})'
+                                                         [1]] = f'{room} ({GameObjects.rooms[room][2]})'
 
     def create_board_display(self):
         display_frame = tk.Frame(master=self)
         display_frame.pack(fill=tk.X)
         self.display = tk.Label(
             master=display_frame,
-            text="Select a room.",
-            font=font.Font(size=10, weight="bold"),
+            text='Miss Scarlett, select a room to inspect.',
+            font=font.Font(size=10, weight='bold'),
         )
         self.display.pack()
 
@@ -111,6 +188,7 @@ class Cluedo(tk.Tk):
         grid_frame = tk.Frame(master=self)
         grid_frame.pack()
 
+        i = 0
         for row in range(rows):
             self.rowconfigure(row, weight=1, minsize=50)
             self.columnconfigure(row, weight=1, minsize=75)
@@ -125,31 +203,23 @@ class Cluedo(tk.Tk):
                 else:
                     bg_color = 'light gray'
 
-                button = tk.Button(
-                    master=grid_frame,
-                    text=game_data[row][col],
-                    # font=font.Font(size=36, weight="bold"),
-                    wraplength=50,
-                    relief="solid",
-                    disabledforeground="black",
-                    fg='black',
-                    bg=bg_color,
-                    width=4,
-                    height=3,
-                )
+                button = self.create_button(
+                    grid_frame, game_data[row][col], bg_color)
+
                 self.cells[button] = (row, col)
                 button.grid(
                     row=row,
                     column=col,
                     padx=5,
                     pady=5,
-                    sticky="nsew"
+                    sticky='nsew'
                 )
 
                 if is_room:
                     button.config(state=tk.NORMAL)
                 else:
                     button.config(state=tk.DISABLED)
+                i += 1
 
 
 def main():
@@ -157,14 +227,17 @@ def main():
 
     cluedo.game_setup()
     cluedo.deal_cards(player_cards)
-    cluedo.player_move(GameObjects.suspects['Miss Scarlet'])
+    print('Miss Scarlett, select a room to inspect.')
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
     cluedo.mainloop()
 
+    suggestion = cluedo.player_suggestion(GameObjects.suspects['Miss Scarlet'])
+    cluedo.check_envelope(suggestion)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     player_cards = [
         [],
         [],

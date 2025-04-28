@@ -10,3 +10,7 @@
 	* Install the requirements with `$ pip install -r requirements.txt`
 * Step 2: Run the application with `$ python3 cluedo.py`. You will see a Tkinter GUI interface displayed.
 * Step 3: Play the game:
+	* You are Miss Scarlett.
+	* Pick a room to visit by clicking on a room in the Tkinter graphical gameboard.
+	* Then make a suggestion by entering a numerical value corresponding the room, weapon, and suspect in the terminal
+	* Finally, your answer will be compared with the contents of the case file to determine whether or not you are correct.

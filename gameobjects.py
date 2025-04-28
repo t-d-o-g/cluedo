@@ -60,6 +60,5 @@ class GameObjects:
         'Study': [1,1]
     }
 
-    die = 1 
     envelope = []
     cards = []
