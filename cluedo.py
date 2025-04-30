@@ -41,11 +41,14 @@ class Cluedo(tk.Tk):
         random.shuffle(GameObjects.weapon_cards)
         random.shuffle(GameObjects.room_cards)
         random.shuffle(GameObjects.weapons)
+        rand_rooms = list(GameObjects.rooms.keys())
+        random.shuffle(rand_rooms)
 
-        for room in GameObjects.rooms:
+        for room in rand_rooms:
             if GameObjects.weapons:
                 weapon = GameObjects.weapons.pop()
                 GameObjects.rooms[room].insert(2, weapon)
+            print(f'Room: {room}, Weapon: {weapon}')
 
         case_file_suspect = GameObjects.suspect_cards.pop(0)
         case_file_weapon = GameObjects.weapon_cards.pop(0)
@@ -113,8 +116,13 @@ class Cluedo(tk.Tk):
         print('7 - Lounge')
         print('8 - Hall')
         print('9 - Study')
-        room_answer = input('Which room did the murder take place in?')
-        suggestion.append(rooms[room_answer])
+        while True:
+            room_answer = int(input('Which room did the murder take place in? '))
+            if 1 <= room_answer <= 9:
+                break
+            else:
+                print("Enter a number between 1 and 9")
+        suggestion.append(rooms[str(room_answer)])
         weapons = {
             '1': 'candlestick',
             '2': 'knife',
@@ -129,8 +137,13 @@ class Cluedo(tk.Tk):
         print('4 - pistol')
         print('5 - rope')
         print('6 - wrench')
-        weapon_answer = input('Which weapon did the murderer use?')
-        suggestion.append(weapons[weapon_answer])
+        while True:
+            weapon_answer = int(input('Which weapon did the murderer use? '))
+            if 1 <= weapon_answer <= 6:
+                break
+            else:
+                print("Enter a number between 1 and 6")
+        suggestion.append(weapons[str(weapon_answer)])
         suspects = {
             '1': 'miss scarlet',
             '2': 'col mustard',
@@ -145,8 +158,13 @@ class Cluedo(tk.Tk):
         print('4 - Mr. Green')
         print('5 - Mrs. Peacock')
         print('6 - Prof Plum')
-        suspect_answer = input('Who do you suspect committed the murderer?')
-        suggestion.append(suspects[suspect_answer])
+        while True:
+            suspect_answer = int(input('Who do you suspect committed the murderer? '))
+            if 1 <= suspect_answer <= 6:
+                break
+            else:
+                print("Enter a number between 1 and 6")
+        suggestion.append(suspects[str(suspect_answer)])
         return suggestion
 
     def check_envelope(self, suggestion):
