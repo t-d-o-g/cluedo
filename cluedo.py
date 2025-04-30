@@ -36,6 +36,8 @@ class Cluedo(tk.Tk):
         'Prof Plum': 'purple',
     }
 
+    current_player = 'Miss Scarlett'
+
     def game_setup(self):
         random.shuffle(GameObjects.suspect_cards)
         random.shuffle(GameObjects.weapon_cards)
@@ -48,7 +50,6 @@ class Cluedo(tk.Tk):
             if GameObjects.weapons:
                 weapon = GameObjects.weapons.pop()
                 GameObjects.rooms[room].insert(2, weapon)
-            print(f'Room: {room}, Weapon: {weapon}')
 
         case_file_suspect = GameObjects.suspect_cards.pop(0)
         case_file_weapon = GameObjects.weapon_cards.pop(0)
@@ -87,13 +88,12 @@ class Cluedo(tk.Tk):
         return button
 
     def button_click(self, room):
-        print(f'Miss Scarlett is in the {room}.')
         self.close_window()
 
     def close_window(self):
         self.destroy()
 
-    def player_suggestion(self, player):
+    def player_suggestion(self):
         suggestion = []
         rooms = {
             '1': 'kitchen',
@@ -106,22 +106,24 @@ class Cluedo(tk.Tk):
             '8': 'hall',
             '9': 'study'
         }
-        print(f'Miss Scarlett, make a suggestion.')
-        print('1 - Kitchen')
-        print('2 - Ballroom')
-        print('3 - Conservatory')
-        print('4 - Billiard Room')
-        print('5 - Dining Room')
-        print('6 - Library')
-        print('7 - Lounge')
-        print('8 - Hall')
-        print('9 - Study')
+        print(f'\n{self.current_player}, make a suggestion.\n')
         while True:
-            room_answer = int(input('Which room did the murder take place in? '))
+            room_answer = int(input('Which room did the murder take place in? \n'
+                                    '1 - Kitchen \n'
+                                    '2 - Ballroom \n'
+                                    '3 - Conservatory \n'
+                                    '4 - Billiard Room \n'
+                                    '5 - Dining Room \n'
+                                    '6 - Library \n'
+                                    '7 - Lounge \n'
+                                    '8 - Hall \n'
+                                    '9 - Study \n'
+                                    ))
+
             if 1 <= room_answer <= 9:
                 break
             else:
-                print("Enter a number between 1 and 9")
+                print("\nEnter a number between 1 and 9.\n")
         suggestion.append(rooms[str(room_answer)])
         weapons = {
             '1': 'candlestick',
@@ -131,18 +133,19 @@ class Cluedo(tk.Tk):
             '5': 'rope',
             '6': 'wrench'
         }
-        print('1 - Candlestick')
-        print('2 - knife')
-        print('3 - lead pipe')
-        print('4 - pistol')
-        print('5 - rope')
-        print('6 - wrench')
         while True:
-            weapon_answer = int(input('Which weapon did the murderer use? '))
+            weapon_answer = int(input('\nWhich weapon did the murderer use? \n' \
+                                      '1 - Candlestick \n' \
+                                      '2 - Knife \n' \
+                                      '3 - Lead Pipe \n' \
+                                      '4 - Pistol \n' \
+                                      '5 - Rope \n' \
+                                      '6 - Wrench \n' \
+                                      ))
             if 1 <= weapon_answer <= 6:
                 break
             else:
-                print("Enter a number between 1 and 6")
+                print("\nEnter a number between 1 and 6.\n")
         suggestion.append(weapons[str(weapon_answer)])
         suspects = {
             '1': 'miss scarlet',
@@ -152,30 +155,37 @@ class Cluedo(tk.Tk):
             '5': 'mrs. peacock',
             '6': 'prof plum'
         }
-        print('1 - Miss Scarlet')
-        print('2 - Col Mustard')
-        print('3 - Mrs. White')
-        print('4 - Mr. Green')
-        print('5 - Mrs. Peacock')
-        print('6 - Prof Plum')
         while True:
-            suspect_answer = int(input('Who do you suspect committed the murderer? '))
+            suspect_answer = int(
+                input('\nWho do you suspect committed the murderer? \n' \
+                      '1 - Miss Scarlet \n' \
+                      '2 - Col Mustard \n' \
+                      '3 - Mrs. White \n' \
+                      '4 - Mr. Green \n' \
+                      '5 - Mrs. Peacock \n' \
+                      '6 - Prof Plum \n' \
+                      ))
             if 1 <= suspect_answer <= 6:
                 break
             else:
-                print("Enter a number between 1 and 6")
+                print("\nEnter a number between 1 and 6.\n")
         suggestion.append(suspects[str(suspect_answer)])
+        print(
+            f"\nI suggest the crime was commited in the {suggestion[0]} by {suggestion[2]} with the {suggestion[1]}.\n")
         return suggestion
+
+    def player_refutation(self, player):
+        print(f'\n{player[2]}, make a refutation.')
 
     def check_envelope(self, suggestion):
         if (suggestion == GameObjects.envelope):
-            print('\nMiss Scarlett you have solved the mystery!')
+            print(f'{self.current_player} you have solved the mystery!')
         else:
-            print('\nSorry Miss Scarlett, according to the case file:')
+            print(
+                f'\nSorry {self.current_player}, according to the case file:')
             print(f'* The murder took place in the {GameObjects.envelope[0]}')
             print(f'* The weapon used was a {GameObjects.envelope[1]}')
             print(f'* And the murderer is {GameObjects.envelope[2]}!')
-
 
     def arrange_game_board(self):
         for suspect in GameObjects.suspects:
@@ -195,7 +205,7 @@ class Cluedo(tk.Tk):
         display_frame.pack(fill=tk.X)
         self.display = tk.Label(
             master=display_frame,
-            text='Miss Scarlett, select a room to inspect.',
+            text=f'{self.current_player}, select a room to inspect.',
             font=font.Font(size=10, weight='bold'),
         )
         self.display.pack()
@@ -245,13 +255,14 @@ def main():
 
     cluedo.game_setup()
     cluedo.deal_cards(player_cards)
-    print('Miss Scarlett, select a room to inspect.')
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
     cluedo.mainloop()
 
-    suggestion = cluedo.player_suggestion(GameObjects.suspects['Miss Scarlet'])
+    suggestion = cluedo.player_suggestion()
+    cluedo.player_refutation(suggestion)
+
     cluedo.check_envelope(suggestion)
 
 
