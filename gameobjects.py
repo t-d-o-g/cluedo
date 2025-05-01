@@ -3,9 +3,9 @@ class GameObjects:
     suspect_cards = [
         'miss scarlet',
         'col mustard',
-        'mrs white',
-        'mr green',
-        'mrs peacock',
+        'mrs. white',
+        'mr. green',
+        'mrs. peacock',
         'prof plum',
     ]
 
@@ -60,5 +60,5 @@ class GameObjects:
         'Study': [1,1]
     }
 
-    envelope = []
+    envelope = ()
     cards = []
