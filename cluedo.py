@@ -35,6 +35,23 @@ class Cluedo(tk.Tk):
         'Mrs. Peacock': 'blue',
         'Prof Plum': 'purple',
     }
+    player_cards = {
+        'miss scarlett': [],
+        'col mustard': [],
+        'mrs. white': [],
+        'mr. green': [],
+        'mrs. peacock': [],
+        'prof plum': [],
+    }
+
+    # player_cards = [
+    #     [],
+    #     [],
+    #     [],
+    #     [],
+    #     [],
+    #     [],
+    # ]
 
     current_player = 'Miss Scarlett'
     suggestions = []
@@ -65,12 +82,25 @@ class Cluedo(tk.Tk):
         GameObjects.cards.extend(GameObjects.room_cards)
         random.shuffle(GameObjects.cards)
 
-    def deal_cards(self, players):
+    def deal_cards(self):
         i = 0
         while len(GameObjects.cards) > 0:
-            card = GameObjects.cards.pop(0)
-            player_cards[i % len(players)].append(card)
+            for key in self.player_cards:
+                if GameObjects.cards:
+                    card = GameObjects.cards.pop(0)
+                    self.player_cards[key].append(card)
             i += 1
+        print("player cards:")
+        print(self.player_cards)
+
+    # def deal_cards(self):
+    #     i = 0
+    #     while len(GameObjects.cards) > 0:
+    #         card = GameObjects.cards.pop(0)
+    #         self.player_cards[i % len(self.player_cards)].append(card)
+    #         i += 1
+    #     print("player cards:")
+    #     print(self.player_cards)
 
     def create_button(self, frame, text, bg_color):
         button = tk.Button(
@@ -176,19 +206,32 @@ class Cluedo(tk.Tk):
         self.suggestions.append(suggestion)
         return suggestion
 
-    def suspect_refutation(self, suspect):
-        print(f'\n{suspect}, make a refutation.')
-
-    def check_envelope(self, suggestion):
+    def suspect_refutation(self, suggestion):
+        print(
+            f'\n{suggestion[3]}, {suggestion[0]} claims you murdered Mr. Boddy in the {suggestion[1]} with a {suggestion[2]}. Is this true?')
         if (suggestion[1:] == GameObjects.envelope):
             print(f'{self.current_player} you have solved the mystery!')
         else:
-            self.suspect_refutation(suggestion[3])
+            print(f'I could not have committed the murder because:')
+            for item in suggestion[:3]:
+                if item in self.player_cards[suggestion[3]]:
+                    print(f'I have evidence it was not {item}.')
             # print(
             #     f'\nSorry {self.current_player}, according to the case file:')
             # print(f'* The murder took place in the {GameObjects.envelope[0]}')
             # print(f'* The weapon used was a {GameObjects.envelope[1]}')
             # print(f'* And the murderer is {GameObjects.envelope[2]}!')
+
+    # def check_envelope(self, suggestion):
+    #     if (suggestion[1:] == GameObjects.envelope):
+    #         print(f'{self.current_player} you have solved the mystery!')
+    #     else:
+    #         self.suspect_refutation(suggestion[3], suggestion)
+    #         # print(
+    #         #     f'\nSorry {self.current_player}, according to the case file:')
+    #         # print(f'* The murder took place in the {GameObjects.envelope[0]}')
+    #         # print(f'* The weapon used was a {GameObjects.envelope[1]}')
+    #         # print(f'* And the murderer is {GameObjects.envelope[2]}!')
 
     def arrange_game_board(self):
         for suspect in GameObjects.suspects:
@@ -257,24 +300,26 @@ def main():
     cluedo = Cluedo()
 
     cluedo.game_setup()
-    cluedo.deal_cards(player_cards)
+    cluedo.deal_cards()
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
     cluedo.mainloop()
 
     suggestion = cluedo.player_suggestion()
-    cluedo.check_envelope(suggestion)
+    cluedo.suspect_refutation(suggestion)
+
+    # cluedo.check_envelope(suggestion)
 
 
 if __name__ == '__main__':
-    player_cards = [
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-    ]
+    # player_cards = [
+    #     [],
+    #     [],
+    #     [],
+    #     [],
+    #     [],
+    #     [],
+    # ]
 
     main()
