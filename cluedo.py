@@ -36,7 +36,7 @@ class Cluedo(tk.Tk):
         'Prof Plum': 'purple',
     }
     player_cards = {
-        'miss scarlett': [],
+        'miss scarlet': [],
         'col mustard': [],
         'mrs. white': [],
         'mr. green': [],
@@ -44,17 +44,8 @@ class Cluedo(tk.Tk):
         'prof plum': [],
     }
 
-    # player_cards = [
-    #     [],
-    #     [],
-    #     [],
-    #     [],
-    #     [],
-    #     [],
-    # ]
-
-    current_player = 'Miss Scarlett'
-    suggestions = []
+    current_player = 'Miss Scarlet'
+    suggestions = [] 
     refutations = []
 
     def game_setup(self):
@@ -93,15 +84,6 @@ class Cluedo(tk.Tk):
         print("player cards:")
         print(self.player_cards)
 
-    # def deal_cards(self):
-    #     i = 0
-    #     while len(GameObjects.cards) > 0:
-    #         card = GameObjects.cards.pop(0)
-    #         self.player_cards[i % len(self.player_cards)].append(card)
-    #         i += 1
-    #     print("player cards:")
-    #     print(self.player_cards)
-
     def create_button(self, frame, text, bg_color):
         button = tk.Button(
             master=frame,
@@ -113,7 +95,7 @@ class Cluedo(tk.Tk):
             bg=bg_color,
             width=4,
             height=3,
-            command=lambda: self.button_click(
+            command=lambda: self.make_suggestion(
                 button['text'])
         )
         return button
@@ -124,59 +106,9 @@ class Cluedo(tk.Tk):
     def close_window(self):
         self.destroy()
 
-    def player_suggestion(self):
-        rooms = {
-            '1': 'kitchen',
-            '2': 'ballroom',
-            '3': 'conservatory',
-            '4': 'billiard room',
-            '5': 'dining room',
-            '6': 'library',
-            '7': 'lounge',
-            '8': 'hall',
-            '9': 'study'
-        }
-        print(f'\n{self.current_player}, make a suggestion.\n')
-        while True:
-            room_answer = int(input('Which room did the murder take place in? \n'
-                                    '1 - Kitchen \n'
-                                    '2 - Ballroom \n'
-                                    '3 - Conservatory \n'
-                                    '4 - Billiard Room \n'
-                                    '5 - Dining Room \n'
-                                    '6 - Library \n'
-                                    '7 - Lounge \n'
-                                    '8 - Hall \n'
-                                    '9 - Study \n'
-                                    ))
-
-            if 1 <= room_answer <= 9:
-                break
-            else:
-                print("\nEnter a number between 1 and 9.\n")
-        room = rooms[str(room_answer)]
-        weapons = {
-            '1': 'candlestick',
-            '2': 'knife',
-            '3': 'lead pipe',
-            '4': 'pistol',
-            '5': 'rope',
-            '6': 'wrench'
-        }
-        while True:
-            weapon_answer = int(input('\nWhich weapon did the murderer use? \n'
-                                      '1 - Candlestick \n'
-                                      '2 - Knife \n'
-                                      '3 - Lead Pipe \n'
-                                      '4 - Pistol \n'
-                                      '5 - Rope \n'
-                                      '6 - Wrench \n'
-                                      ))
-            if 1 <= weapon_answer <= 6:
-                break
-            else:
-                print("\nEnter a number between 1 and 6.\n")
-        weapon = weapons[str(weapon_answer)]
+    def make_suggestion(self, room):
+        self.close_window()
+        room = room.split(' (', 1)[0].lower()
         suspects = {
             '1': 'miss scarlet',
             '2': 'col mustard',
@@ -200,38 +132,47 @@ class Cluedo(tk.Tk):
             else:
                 print("\nEnter a number between 1 and 6.\n")
         suspect = suspects[str(suspect_answer)]
+
+        weapons = {
+            '1': 'candlestick',
+            '2': 'knife',
+            '3': 'lead pipe',
+            '4': 'pistol',
+            '5': 'rope',
+            '6': 'wrench'
+        }
+        while True:
+            weapon_answer = int(input('\nWhich weapon did the murderer use? \n'
+                                      '1 - Candlestick \n'
+                                      '2 - Knife \n'
+                                      '3 - Lead Pipe \n'
+                                      '4 - Pistol \n'
+                                      '5 - Rope \n'
+                                      '6 - Wrench \n'
+                                      ))
+            if 1 <= weapon_answer <= 6:
+                break
+            else:
+                print("\nEnter a number between 1 and 6.\n")
+        weapon = weapons[str(weapon_answer)]
         print(
-            f"\nI suggest the crime was commited in the {room} by {suspect} with the {weapon}.\n")
+            f"\n{self.current_player}: I suggest the crime was commited in the {room} by {suspect} with the {weapon}.\n")
         suggestion = (self.current_player, room, weapon, suspect)
         self.suggestions.append(suggestion)
         return suggestion
 
-    def suspect_refutation(self, suggestion):
-        print(
-            f'\n{suggestion[3]}, {suggestion[0]} claims you murdered Mr. Boddy in the {suggestion[1]} with a {suggestion[2]}. Is this true?')
+    def suspect_refutation(self):
+        suggestion = self.suggestions[0]
         if (suggestion[1:] == GameObjects.envelope):
             print(f'{self.current_player} you have solved the mystery!')
         else:
-            print(f'I could not have committed the murder because:')
+            print(
+                f'{suggestion[3]}: I could not have committed the murder because:')
             for item in suggestion[:3]:
                 if item in self.player_cards[suggestion[3]]:
-                    print(f'I have evidence it was not {item}.')
-            # print(
-            #     f'\nSorry {self.current_player}, according to the case file:')
-            # print(f'* The murder took place in the {GameObjects.envelope[0]}')
-            # print(f'* The weapon used was a {GameObjects.envelope[1]}')
-            # print(f'* And the murderer is {GameObjects.envelope[2]}!')
-
-    # def check_envelope(self, suggestion):
-    #     if (suggestion[1:] == GameObjects.envelope):
-    #         print(f'{self.current_player} you have solved the mystery!')
-    #     else:
-    #         self.suspect_refutation(suggestion[3], suggestion)
-    #         # print(
-    #         #     f'\nSorry {self.current_player}, according to the case file:')
-    #         # print(f'* The murder took place in the {GameObjects.envelope[0]}')
-    #         # print(f'* The weapon used was a {GameObjects.envelope[1]}')
-    #         # print(f'* And the murderer is {GameObjects.envelope[2]}!')
+                    print(f'I can say for sure it was not {item}.')
+                else:
+                    print('No I can not.')
 
     def arrange_game_board(self):
         for suspect in GameObjects.suspects:
@@ -301,25 +242,15 @@ def main():
 
     cluedo.game_setup()
     cluedo.deal_cards()
+    print("Envelope:")
+    print(GameObjects.envelope)
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
     cluedo.mainloop()
 
-    suggestion = cluedo.player_suggestion()
-    cluedo.suspect_refutation(suggestion)
-
-    # cluedo.check_envelope(suggestion)
+    cluedo.suspect_refutation()
 
 
 if __name__ == '__main__':
-    # player_cards = [
-    #     [],
-    #     [],
-    #     [],
-    #     [],
-    #     [],
-    #     [],
-    # ]
-
     main()
