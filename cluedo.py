@@ -65,6 +65,15 @@ class Cluedo(tk.Tk):
         'prof plum': [],
     }
 
+    player_deductions = {
+        'miss scarlet': [],
+        'col mustard': [],
+        'mrs. white': [],
+        'mr. green': [],
+        'mrs. peacock': [],
+        'prof plum': [],
+    }
+
     def game_setup(self):
         random.shuffle(GameObjects.suspect_cards)
         random.shuffle(GameObjects.weapon_cards)
@@ -97,9 +106,12 @@ class Cluedo(tk.Tk):
                 if GameObjects.cards:
                     card = GameObjects.cards.pop(0)
                     self.player_cards[key].append(card)
+                    self.player_deductions[key].append(card)
             i += 1
         print("player cards:")
         print(self.player_cards)
+        print(
+            f'Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
 
     def create_button(self, frame, text, bg_color):
         button = tk.Button(
@@ -193,10 +205,13 @@ class Cluedo(tk.Tk):
                         self.player_refutations[self.current_player.lower()].append(
                             item)
                         break
+        self.player_deductions[self.current_player.lower()].extend(self.player_refutations[self.current_player.lower()])
         print(
             f'Suggestions: {self.player_suggestions[self.current_player.lower()][0]}')
         print(
             f'Refutations: {self.player_refutations[self.current_player.lower()]}')
+        print(
+            f'Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
 
     def make_accusation(self):
         accusation = self.player_suggestions[self.current_player.lower()][0]
