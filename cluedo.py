@@ -239,7 +239,7 @@ class Cluedo(tk.Tk):
                         self.player_refutations[self.current_player.lower()].append(
                             item)
                         break
-        self.player_cards[self.current_player.lower()] = current_player_cards
+        self.player_cards[self.current_player] = current_player_cards
         self.player_deductions[self.current_player.lower()].extend(
             self.player_refutations[self.current_player.lower()])
         print(
