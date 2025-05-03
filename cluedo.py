@@ -36,7 +36,7 @@ class Cluedo(tk.Tk):
         'Profesor Plum': 'purple',
     }
 
-    current_player = 'Miss Scarlet'
+    current_player = 'miss scarlet'
 
     player_cards = {
         'miss scarlet': [],
@@ -108,10 +108,14 @@ class Cluedo(tk.Tk):
                     self.player_cards[key].append(card)
                     self.player_deductions[key].append(card)
             i += 1
-        print("player cards:")
-        print(self.player_cards)
         print(
-            f'Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
+            f'{self.current_player.title()} Cards: {self.player_cards[self.current_player.lower()]}')
+        print(
+            f'{self.current_player.title()} Suggestions: {self.player_suggestions[self.current_player.lower()]}')
+        print(
+            f'{self.current_player.title()} Refutations: {self.player_refutations[self.current_player.lower()]}')
+        print(
+            f'{self.current_player.title()} Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
 
     def create_button(self, frame, text, bg_color):
         button = tk.Button(
@@ -203,11 +207,12 @@ class Cluedo(tk.Tk):
         suggestion = (room, weapon, suspect)
 
         if accusation:
-            print('checking envelope')
+            print(
+                f"\n{self.current_player.title()}: I accuse {suspect.title()} of commiting the crime in the {room} with the {weapon}.\n")
             self.check_envelope(suggestion)
         else:
             print(
-                f"\n{self.current_player}: I suggest the crime was committed in the {room} by {suspect.title()} with the {weapon}.\n")
+                f"\n{self.current_player.title()}: I suggest the crime was committed in the {room} by {suspect.title()} with the {weapon}.\n")
             self.player_suggestions[self.current_player.lower()].append(
                 suggestion)
             self.suspect_refutation()
@@ -224,10 +229,24 @@ class Cluedo(tk.Tk):
         print(
             f'{player.title()}: I can say without a doubt the murder was not committed {preposition} {item}.\n')
 
+    def print_detective_notes(self,):
+        self.player_deductions[self.current_player.lower()].extend(
+            x for x in self.player_refutations[self.current_player.lower()]
+            if x not in self.player_deductions[self.current_player.lower()])
+        print(
+            f'{self.current_player.title()} Cards: {self.player_cards[self.current_player.lower()]}')
+        print(
+            f'{self.current_player.title()} Suggestions: {self.player_suggestions[self.current_player.lower()]}')
+        print(
+            f'{self.current_player.title()} Refutations: {self.player_refutations[self.current_player.lower()]}')
+        print(
+            f'{self.current_player.title()} Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
+
     def suspect_refutation(self):
-        suggestion = self.player_suggestions[self.current_player.lower()][0]
+        suggestion = self.player_suggestions[self.current_player.lower()][-1]
         match = False
-        current_player_cards = self.player_cards.pop(self.current_player.lower())
+        current_player_cards = self.player_cards.pop(
+            self.current_player.lower())
         for player in self.player_cards:
             if match:
                 break
@@ -240,16 +259,9 @@ class Cluedo(tk.Tk):
                             item)
                         break
         self.player_cards[self.current_player] = current_player_cards
-        self.player_deductions[self.current_player.lower()].extend(
-            self.player_refutations[self.current_player.lower()])
-        print(
-            f'Suggestions: {self.player_suggestions[self.current_player.lower()][0]}')
-        print(
-            f'Refutations: {self.player_refutations[self.current_player.lower()]}')
-        print(
-            f'Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
-
         self.current_player = next(iter(self.player_cards))
+
+        self.print_detective_notes()
         self.update_display_title(
             f'{self.current_player.title()}, select a room to inspect.')
         self.open_window()
@@ -274,7 +286,7 @@ class Cluedo(tk.Tk):
         return make_accusation
 
     def check_envelope(self, accusation):
-        print(f'Accusation: {accusation}')
+        print(f'\nEnvelope: {GameObjects.envelope}')
         alibi = f'I could not have committed the murder because'
         if (accusation == GameObjects.envelope):
             print(f'\n{self.current_player} you have found the murderer!')
@@ -352,13 +364,12 @@ class Cluedo(tk.Tk):
                     button.config(state=tk.DISABLED)
                 i += 1
 
+
 def main():
     cluedo = Cluedo()
 
     cluedo.game_setup()
     cluedo.deal_cards()
-    print("Envelope:")
-    print(GameObjects.envelope)
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
