@@ -35,6 +35,9 @@ class Cluedo(tk.Tk):
         'Mrs. Peacock': 'blue',
         'Prof Plum': 'purple',
     }
+
+    current_player = 'Miss Scarlet'
+
     player_cards = {
         'miss scarlet': [],
         'col mustard': [],
@@ -44,9 +47,23 @@ class Cluedo(tk.Tk):
         'prof plum': [],
     }
 
-    current_player = 'Miss Scarlet'
-    suggestions = [] 
-    refutations = []
+    player_suggestions = {
+        'miss scarlet': [],
+        'col mustard': [],
+        'mrs. white': [],
+        'mr. green': [],
+        'mrs. peacock': [],
+        'prof plum': [],
+    }
+
+    player_refutations = {
+        'miss scarlet': [],
+        'col mustard': [],
+        'mrs. white': [],
+        'mr. green': [],
+        'mrs. peacock': [],
+        'prof plum': [],
+    }
 
     def game_setup(self):
         random.shuffle(GameObjects.suspect_cards)
@@ -157,22 +174,37 @@ class Cluedo(tk.Tk):
         weapon = weapons[str(weapon_answer)]
         print(
             f"\n{self.current_player}: I suggest the crime was commited in the {room} by {suspect} with the {weapon}.\n")
-        suggestion = (self.current_player, room, weapon, suspect)
-        self.suggestions.append(suggestion)
+        suggestion = (room, weapon, suspect)
+        self.player_suggestions[self.current_player.lower()].append(suggestion)
         return suggestion
 
     def suspect_refutation(self):
-        suggestion = self.suggestions[0]
-        if (suggestion[1:] == GameObjects.envelope):
+        suggestion = self.player_suggestions[self.current_player.lower()][0]
+        match = False
+        del self.player_cards[self.current_player.lower()]
+        for player in self.player_cards:
+            if match:
+                break
+            for item in suggestion:
+                if item in self.player_cards[player]:
+                    match = True
+                    if match:
+                        print(f'{player}: I can say for sure it was not {item}.')
+                        self.player_refutations[self.current_player.lower()].append(
+                            item)
+                        break
+        print(
+            f'Suggestions: {self.player_suggestions[self.current_player.lower()][0]}')
+        print(
+            f'Refutations: {self.player_refutations[self.current_player.lower()]}')
+
+    def make_accusation(self):
+        accusation = self.player_suggestions[self.current_player.lower()][0]
+        if (accusation == GameObjects.envelope):
             print(f'{self.current_player} you have solved the mystery!')
         else:
             print(
-                f'{suggestion[3]}: I could not have committed the murder because:')
-            for item in suggestion[:3]:
-                if item in self.player_cards[suggestion[3]]:
-                    print(f'I can say for sure it was not {item}.')
-                else:
-                    print('No I can not.')
+                f'{accusation[2]}: I could not have committed the murder because:')
 
     def arrange_game_board(self):
         for suspect in GameObjects.suspects:
