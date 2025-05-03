@@ -2,11 +2,11 @@
 class GameObjects:
     suspect_cards = [
         'miss scarlet',
-        'col mustard',
+        'colonel mustard',
         'mrs. white',
         'mr. green',
         'mrs. peacock',
-        'prof plum',
+        'profesor plum',
     ]
 
     weapon_cards = [
@@ -41,11 +41,11 @@ class GameObjects:
 
     suspects = {
         'Miss Scarlet': [0,6],
-        'Col Mustard': [3,9],
+        'Colonel Mustard': [3,9],
         'Mrs. White': [11,5],
         'Mr. Green': [11,3],
         'Mrs. Peacock': [9,0],
-        'Prof Plum': [4,0],
+        'Profesor Plum': [4,0],
     }
 
     rooms = {

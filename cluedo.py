@@ -29,49 +29,49 @@ class Cluedo(tk.Tk):
 
     color_map = {
         'Miss Scarlet': 'red',
-        'Col Mustard': 'yellow',
+        'Colonel Mustard': 'yellow',
         'Mrs. White': 'white',
         'Mr. Green': 'green',
         'Mrs. Peacock': 'blue',
-        'Prof Plum': 'purple',
+        'Profesor Plum': 'purple',
     }
 
     current_player = 'Miss Scarlet'
 
     player_cards = {
         'miss scarlet': [],
-        'col mustard': [],
+        'colonel mustard': [],
         'mrs. white': [],
         'mr. green': [],
         'mrs. peacock': [],
-        'prof plum': [],
+        'profesor plum': [],
     }
 
     player_suggestions = {
         'miss scarlet': [],
-        'col mustard': [],
+        'colonel mustard': [],
         'mrs. white': [],
         'mr. green': [],
         'mrs. peacock': [],
-        'prof plum': [],
+        'profesor plum': [],
     }
 
     player_refutations = {
         'miss scarlet': [],
-        'col mustard': [],
+        'colonel mustard': [],
         'mrs. white': [],
         'mr. green': [],
         'mrs. peacock': [],
-        'prof plum': [],
+        'profesor plum': [],
     }
 
     player_deductions = {
         'miss scarlet': [],
-        'col mustard': [],
+        'colonel mustard': [],
         'mrs. white': [],
         'mr. green': [],
         'mrs. peacock': [],
-        'prof plum': [],
+        'profesor plum': [],
     }
 
     def game_setup(self):
@@ -140,21 +140,21 @@ class Cluedo(tk.Tk):
         room = room.split(' (', 1)[0].lower()
         suspects = {
             '1': 'miss scarlet',
-            '2': 'col mustard',
+            '2': 'colonel mustard',
             '3': 'mrs. white',
             '4': 'mr. green',
             '5': 'mrs. peacock',
-            '6': 'prof plum'
+            '6': 'profesor plum'
         }
         while True:
             suspect_answer = int(
                 input('\nWho do you suspect committed the murderer? \n'
                       '1 - Miss Scarlet \n'
-                      '2 - Col Mustard \n'
+                      '2 - Colonel Mustard \n'
                       '3 - Mrs. White \n'
                       '4 - Mr. Green \n'
                       '5 - Mrs. Peacock \n'
-                      '6 - Prof Plum \n'
+                      '6 - Profesor Plum \n'
                       ))
             if 1 <= suspect_answer <= 6:
                 break
@@ -185,10 +185,21 @@ class Cluedo(tk.Tk):
                 print("\nEnter a number between 1 and 6.\n")
         weapon = weapons[str(weapon_answer)]
         print(
-            f"\n{self.current_player}: I suggest the crime was commited in the {room} by {suspect} with the {weapon}.\n")
+            f"\n{self.current_player}: I suggest the crime was commited in the {room} by {suspect.title()} with the {weapon}.\n")
         suggestion = (room, weapon, suspect)
         self.player_suggestions[self.current_player.lower()].append(suggestion)
         return suggestion
+
+    def refute(self, player, item):
+        preposition = 'in the'
+        if item in GameObjects.weapon_cards:
+            preposition = 'with the'
+        elif item in GameObjects.suspect_cards:
+            preposition = 'by'
+            item = item.title()
+
+        print(
+            f'{player.title()}: I can say for sure the murder was not committed {preposition} {item}.\n')
 
     def suspect_refutation(self):
         suggestion = self.player_suggestions[self.current_player.lower()][0]
@@ -201,11 +212,12 @@ class Cluedo(tk.Tk):
                 if item in self.player_cards[player]:
                     match = True
                     if match:
-                        print(f'{player}: I can say for sure it was not {item}.')
+                        self.refute(player, item)
                         self.player_refutations[self.current_player.lower()].append(
                             item)
                         break
-        self.player_deductions[self.current_player.lower()].extend(self.player_refutations[self.current_player.lower()])
+        self.player_deductions[self.current_player.lower()].extend(
+            self.player_refutations[self.current_player.lower()])
         print(
             f'Suggestions: {self.player_suggestions[self.current_player.lower()][0]}')
         print(
@@ -214,12 +226,25 @@ class Cluedo(tk.Tk):
             f'Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
 
     def make_accusation(self):
-        accusation = self.player_suggestions[self.current_player.lower()][0]
-        if (accusation == GameObjects.envelope):
-            print(f'{self.current_player} you have solved the mystery!')
-        else:
-            print(
-                f'{accusation[2]}: I could not have committed the murder because:')
+        print(f'{self.current_player}, would you like to make an accusation?')
+        while True:
+            make_accusation = int(
+                input(f'\n{self.current_player}, would you like to make an accusation?\n'
+                      '1 - Yes \n'
+                      '2 - No \n'
+                      ))
+            if 1 <= make_accusation <= 2:
+                break
+            else:
+                print("\nEnter the number 1 or 2.\n")
+        if make_accusation == 1:
+            accusation = self.player_suggestions[self.current_player.lower(
+            )][0]
+            if (accusation == GameObjects.envelope):
+                print(f'\n{self.current_player} you have solved the mystery!')
+            else:
+                print(
+                    f'\n{accusation[2].title()}: I could not have committed the murder because:')
 
     def arrange_game_board(self):
         for suspect in GameObjects.suspects:
