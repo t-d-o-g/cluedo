@@ -258,6 +258,13 @@ class Cluedo(tk.Tk):
                         self.player_refutations[self.current_player.lower()].append(
                             item)
                         break
+        if not match:
+            accusation = self.make_suggestion_accusation()
+            if accusation:
+                self.check_envelope(
+                    self.player_suggestions[self.current_player.lower()][-1])
+                return
+
         self.player_cards[self.current_player] = current_player_cards
         self.current_player = next(iter(self.player_cards))
 
@@ -269,7 +276,7 @@ class Cluedo(tk.Tk):
     def make_accusation(self):
         while True:
             make_accusation = int(
-                input(f'\n{self.current_player}, would you like to make an suggestion, accusation, or quit?\n'
+                input(f'\n{self.current_player.title()}, would you like to make a suggestion, accusation, or quit?\n'
                       '1 - Suggestion\n'
                       '2 - Accusation\n'
                       '3 - Quit \n'
@@ -277,10 +284,28 @@ class Cluedo(tk.Tk):
             if 1 <= make_accusation <= 3:
                 break
             else:
-                print("\nEnter the number 1 or 2.\n")
+                print("\nEnter a number between 1 and 3.\n")
         if make_accusation == 2:
             return True
         elif make_accusation == 1:
+            return False
+
+        return make_accusation
+
+    def make_suggestion_accusation(self):
+        while True:
+            make_accusation = int(
+                input(f'{self.current_player.title()}, it seems that nobody can refute your suggestion, would you like to make an accusation?\n'
+                      '1 - Yes\n'
+                      '2 - No\n'
+                      ))
+            if 1 <= make_accusation <= 2:
+                break
+            else:
+                print("\nEnter the number 1 or 2.\n")
+        if make_accusation == 1:
+            return True
+        elif make_accusation == 2:
             return False
 
         return make_accusation
@@ -289,7 +314,7 @@ class Cluedo(tk.Tk):
         print(f'\nEnvelope: {GameObjects.envelope}')
         alibi = f'I could not have committed the murder because'
         if (accusation == GameObjects.envelope):
-            print(f'\n{self.current_player} you have found the murderer!')
+            print(f'\n{self.current_player.title()} you have found the murderer!')
         else:
             for item in accusation:
                 if item not in GameObjects.envelope:
@@ -370,6 +395,7 @@ def main():
 
     cluedo.game_setup()
     cluedo.deal_cards()
+    # print(f'Envelope: {GameObjects.envelope}')
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
