@@ -207,7 +207,7 @@ class Cluedo(tk.Tk):
             self.check_envelope(suggestion)
         else:
             print(
-                f"\n{self.current_player}: I suggest the crime was commited in the {room} by {suspect.title()} with the {weapon}.\n")
+                f"\n{self.current_player}: I suggest the crime was committed in the {room} by {suspect.title()} with the {weapon}.\n")
             self.player_suggestions[self.current_player.lower()].append(
                 suggestion)
             self.suspect_refutation()
@@ -227,8 +227,7 @@ class Cluedo(tk.Tk):
     def suspect_refutation(self):
         suggestion = self.player_suggestions[self.current_player.lower()][0]
         match = False
-        del self.player_cards[self.current_player.lower()]
-        # current_player_cards = self.player_cards.pop(self.current_player.lower())
+        current_player_cards = self.player_cards.pop(self.current_player.lower())
         for player in self.player_cards:
             if match:
                 break
@@ -240,7 +239,7 @@ class Cluedo(tk.Tk):
                         self.player_refutations[self.current_player.lower()].append(
                             item)
                         break
-        # self.player_cards[self.current_player] = current_player_cards
+        self.player_cards[self.current_player.lower()] = current_player_cards
         self.player_deductions[self.current_player.lower()].extend(
             self.player_refutations[self.current_player.lower()])
         print(
@@ -250,34 +249,27 @@ class Cluedo(tk.Tk):
         print(
             f'Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
 
-        self.current_player = 'Colonel Mustard'
+        self.current_player = next(iter(self.player_cards))
         self.update_display_title(
-            f'{self.current_player}, select a room to inspect.')
+            f'{self.current_player.title()}, select a room to inspect.')
         self.open_window()
 
     def make_accusation(self):
         while True:
             make_accusation = int(
-                input(f'\n{self.current_player}, would you like to make an accusation, suggestion, or quit?\n'
-                      '1 - Accusation \n'
-                      '2 - Suggestion \n'
+                input(f'\n{self.current_player}, would you like to make an suggestion, accusation, or quit?\n'
+                      '1 - Suggestion\n'
+                      '2 - Accusation\n'
                       '3 - Quit \n'
                       ))
             if 1 <= make_accusation <= 3:
                 break
             else:
                 print("\nEnter the number 1 or 2.\n")
-        if make_accusation == 1:
+        if make_accusation == 2:
             return True
-        elif make_accusation == 2:
+        elif make_accusation == 1:
             return False
-            # accusation = self.player_suggestions[self.current_player.lower(
-            # )][0]
-            # if (accusation == GameObjects.envelope):
-            #     print(f'\n{self.current_player} you have solved the mystery!')
-            # else:
-            # print(
-            #     f'\n{accusation[2].title()}: I could not have committed the murder because:')
 
         return make_accusation
 
@@ -294,7 +286,7 @@ class Cluedo(tk.Tk):
                     elif item in GameObjects.room_cards:
                         alibi += f' I was not in the {item} at that time.'
                     elif item in GameObjects.suspect_cards:
-                        alibi += f' The DNA test proves it.'
+                        alibi += f' The DNA test proves it was not me.'
             print(f'\n{accusation[2].title()}: {alibi}')
         self.destroy_window()
 
@@ -360,7 +352,6 @@ class Cluedo(tk.Tk):
                     button.config(state=tk.DISABLED)
                 i += 1
 
-
 def main():
     cluedo = Cluedo()
 
@@ -372,8 +363,6 @@ def main():
     cluedo.display_game(cluedo.board)
 
     cluedo.mainloop()
-
-    # cluedo.suspect_refutation()
 
 
 if __name__ == '__main__':
