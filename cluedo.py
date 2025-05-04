@@ -161,7 +161,7 @@ class Cluedo(tk.Tk):
         }
         while True:
             suspect_answer = int(
-                input('\nWho do you suspect committed the murderer? \n'
+                input('\nWho do you suspect committed the murder? \n'
                       '1 - Miss Scarlet \n'
                       '2 - Colonel Mustard \n'
                       '3 - Mrs. White \n'
