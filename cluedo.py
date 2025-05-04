@@ -108,14 +108,7 @@ class Cluedo(tk.Tk):
                     self.player_cards[key].append(card)
                     self.player_deductions[key].append(card)
             i += 1
-        print(
-            f'{self.current_player.title()} Cards: {self.player_cards[self.current_player.lower()]}')
-        print(
-            f'{self.current_player.title()} Suggestions: {self.player_suggestions[self.current_player.lower()]}')
-        print(
-            f'{self.current_player.title()} Refutations: {self.player_refutations[self.current_player.lower()]}')
-        print(
-            f'{self.current_player.title()} Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
+        self.print_detective_notes()
 
     def create_button(self, frame, text, bg_color):
         button = tk.Button(
@@ -233,6 +226,8 @@ class Cluedo(tk.Tk):
         self.player_deductions[self.current_player.lower()].extend(
             x for x in self.player_refutations[self.current_player.lower()]
             if x not in self.player_deductions[self.current_player.lower()])
+        print('-----------------------------------------------')
+        print(f'{self.current_player.title()} Detective Notes:')
         print(
             f'{self.current_player.title()} Cards: {self.player_cards[self.current_player.lower()]}')
         print(
@@ -241,6 +236,7 @@ class Cluedo(tk.Tk):
             f'{self.current_player.title()} Refutations: {self.player_refutations[self.current_player.lower()]}')
         print(
             f'{self.current_player.title()} Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
+        print('-----------------------------------------------')
 
     def suspect_refutation(self):
         suggestion = self.player_suggestions[self.current_player.lower()][-1]
