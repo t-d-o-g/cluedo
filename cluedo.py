@@ -401,7 +401,7 @@ def main():
     ws = cluedo.winfo_screenwidth()
     hs = cluedo.winfo_screenheight()
     x = (ws/2) - (w/2) + 800
-    y = (hs/2) - (h/2)
+    y = (hs/2) - (h/2) - 200
     cluedo.geometry('%dx%d+%d+%d' % (w, h, x, y))
     cluedo.mainloop()
 
