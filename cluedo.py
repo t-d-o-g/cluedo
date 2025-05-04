@@ -396,6 +396,13 @@ def main():
     cluedo.arrange_game_board()
     cluedo.display_game(cluedo.board)
 
+    w = 800
+    h = 1000
+    ws = cluedo.winfo_screenwidth()
+    hs = cluedo.winfo_screenheight()
+    x = (ws/2) - (w/2) + 800
+    y = (hs/2) - (h/2)
+    cluedo.geometry('%dx%d+%d+%d' % (w, h, x, y))
     cluedo.mainloop()
 
 
