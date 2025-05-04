@@ -228,14 +228,15 @@ class Cluedo(tk.Tk):
             if x not in self.player_deductions[self.current_player.lower()])
         print('-----------------------------------------------')
         print(f'{self.current_player.title()} Detective Notes:')
+        print('-----------------------------------------------')
         print(
-            f'{self.current_player.title()} Cards: {self.player_cards[self.current_player.lower()]}')
+            f'Cards: {self.player_cards[self.current_player.lower()]}')
         print(
-            f'{self.current_player.title()} Suggestions: {self.player_suggestions[self.current_player.lower()]}')
+            f'Suggestions: {self.player_suggestions[self.current_player.lower()]}')
         print(
-            f'{self.current_player.title()} Refutations: {self.player_refutations[self.current_player.lower()]}')
+            f'Refutations: {self.player_refutations[self.current_player.lower()]}')
         print(
-            f'{self.current_player.title()} Deductions: Definitely not {self.player_deductions[self.current_player.lower()]}')
+            f'Deductions: {self.player_deductions[self.current_player.lower()]}')
         print('-----------------------------------------------')
 
     def suspect_refutation(self):
