@@ -5,6 +5,9 @@ from gameobjects import GameObjects
 
 
 class Cluedo(tk.Tk):
+    """
+    Class used to represent the game.
+    """
 
     def __init__(self):
         super().__init__()
@@ -75,6 +78,10 @@ class Cluedo(tk.Tk):
     }
 
     def game_setup(self):
+        """
+        Randomizes the cards
+        Adds cards to case file envelope
+        """
         random.shuffle(GameObjects.suspect_cards)
         random.shuffle(GameObjects.weapon_cards)
         random.shuffle(GameObjects.room_cards)
@@ -100,6 +107,9 @@ class Cluedo(tk.Tk):
         random.shuffle(GameObjects.cards)
 
     def deal_cards(self):
+        """
+        Deals cards to players
+        """
         i = 0
         while len(GameObjects.cards) > 0:
             for key in self.player_cards:
@@ -111,6 +121,9 @@ class Cluedo(tk.Tk):
         self.print_detective_notes()
 
     def create_button(self, frame, text, bg_color):
+        """
+        Tkinter button to select room
+        """
         button = tk.Button(
             master=frame,
             text=text,
@@ -127,22 +140,40 @@ class Cluedo(tk.Tk):
         return button
 
     def button_click(self):
+        """
+        Handles button click
+        """
         self.close_window()
 
     def close_window(self):
+        """
+        Handles closing window 
+        """
         self.withdraw()
 
     def open_window(self):
+        """
+        Handles opening window 
+        """
         self.deiconify()
 
     def destroy_window(self):
+        """
+        Handles destroying window 
+        """
         self.destroy()
 
     def update_display_title(self, title):
+        """
+        Handles updating window display title 
+        """
         self.display.config(text=title)
         self.update()
 
     def make_suggestion(self, room):
+        """
+        Provides prompt for making suggestion
+        """
         self.close_window()
         accusation = self.make_accusation()
         if accusation == 3:
@@ -212,6 +243,9 @@ class Cluedo(tk.Tk):
             return suggestion
 
     def refute(self, player, item):
+        """
+        Displays text for refutation 
+        """
         preposition = 'in the'
         if item in GameObjects.weapon_cards:
             preposition = 'with the'
@@ -223,6 +257,9 @@ class Cluedo(tk.Tk):
             f'{player.title()}: I can say without a doubt the murder was not committed {preposition} {item}.\n')
 
     def print_detective_notes(self,):
+        """
+        Displays detective notes 
+        """
         self.player_deductions[self.current_player.lower()].extend(
             x for x in self.player_refutations[self.current_player.lower()]
             if x not in self.player_deductions[self.current_player.lower()])
@@ -240,6 +277,9 @@ class Cluedo(tk.Tk):
         print('-----------------------------------------------')
 
     def suspect_refutation(self):
+        """
+        Logic for refuting a suggestion
+        """
         suggestion = self.player_suggestions[self.current_player.lower()][-1]
         match = False
         current_player_cards = self.player_cards.pop(
@@ -271,6 +311,9 @@ class Cluedo(tk.Tk):
         self.open_window()
 
     def make_accusation(self):
+        """
+        Provides prompt for making accusation 
+        """
         while True:
             make_accusation = int(
                 input(f'\n{self.current_player.title()}, would you like to make a suggestion, accusation, or quit?\n'
@@ -290,6 +333,9 @@ class Cluedo(tk.Tk):
         return make_accusation
 
     def make_suggestion_accusation(self):
+        """
+        Provides prompt for making accusation following suggestion
+        """
         while True:
             make_accusation = int(
                 input(f'{self.current_player.title()}, it seems that nobody can refute your suggestion, would you like to make an accusation?\n'
@@ -308,6 +354,9 @@ class Cluedo(tk.Tk):
         return make_accusation
 
     def check_envelope(self, accusation):
+        """
+        Determines if accusation is successful or not
+        """
         print(f'\nEnvelope: {GameObjects.envelope}')
         alibi = f'I could not have committed the murder because'
         if (accusation == GameObjects.envelope):
@@ -325,6 +374,9 @@ class Cluedo(tk.Tk):
         self.destroy_window()
 
     def arrange_game_board(self):
+        """
+        Arranges display of elements on the game board 
+        """
         for suspect in GameObjects.suspects:
             Cluedo.board[GameObjects.suspects[suspect][0]
                          ][GameObjects.suspects[suspect][1]] = suspect
@@ -338,6 +390,9 @@ class Cluedo(tk.Tk):
                                                          [1]] = f'{room} ({GameObjects.rooms[room][2]})'
 
     def create_board_display(self):
+        """
+        Create the Tkinter game board 
+        """
         display_frame = tk.Frame(master=self)
         display_frame.pack(fill=tk.X)
         self.display = tk.Label(
@@ -348,6 +403,9 @@ class Cluedo(tk.Tk):
         self.display.pack()
 
     def display_game(self, game_data):
+        """
+        Display the Tkinter game board
+        """
         rows = len(game_data)
         cols = len(game_data[0])
         grid_frame = tk.Frame(master=self)
@@ -388,6 +446,9 @@ class Cluedo(tk.Tk):
 
 
 def main():
+    """
+    Main function
+    """
     cluedo = Cluedo()
 
     cluedo.game_setup()
